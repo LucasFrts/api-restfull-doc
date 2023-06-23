@@ -35,10 +35,11 @@ class ResponseHelper{
         ];
         return response()->json($response, self::ERROR);
     }
-    public static function badRequest(String $msg = 'Falha na requisição.'){
+    public static function badRequest(String $msg = 'Falha na requisição.', $errors = []){
         $response = [
             'success' => false,
-            'message' => $msg
+            'message' => $msg,
+            'errors' => $errors
         ];
         return response()->json($response, self::BADREQUEST);
     }

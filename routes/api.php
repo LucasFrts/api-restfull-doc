@@ -14,5 +14,10 @@ use App\Http\Controllers\UsersController;
 |
 */
 Route::middleware('jwt.check')->group( function(){
-    Route::get('users', [UsersController::class, 'index']);
+    Route::get('bem-vindo', [UsersController::class, 'index']);
+    Route::get('user/get-all', [UsersController::class, 'getAll']);
+    Route::get('user/get-active', [UsersController::class, 'getActive']);
+    Route::get('user/{id}', [UsersController::class, 'get']);
+    Route::post('user', [UsersController::class, 'create'])->middleware('validate.users.data')->name('user');
+    Route::put('user/{id}', [UsersController::class, 'update'])->middleware('validate.users.data')->name('user.update');  
 });

@@ -7,12 +7,114 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UsersEndpointsTest extends TestCase{
-    public function testGetUsers(){
-        $response = $this->get('/api/users');
-        $response->assertStatus(200);
-        $response->assertJson(['message' => 'Success']);
+
+    // teste de de get rota bem vindo
+    public function testBemVindoEndpoint(){
+        $response = $this->get('/api/bem-vindo');
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJson(['message' => 'seja bem vindo! meu nome é Lucas e meu github é LucasFrts']);
     }
-    public function testGetUser(){
-        
+    // teste de de get user especifico
+    public function testGetEndpoint(){
+        $response = $this->get('/api/user/1');
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJson(['message' => 'Requisição concluida com sucesso!'])
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' =>[
+                    'id',
+                    'name',
+                    'email'
+                ]
+            ]);
+    }
+    // teste de de get sem resultado
+    public function testGetNotFoundEndpoint(){
+        $response = $this->get('/api/user/99999');
+        $response->assertStatus(204);
+    }
+    // teste de get all usuarios
+    public function testGetAllEndpoint(){
+        $response = $this->get('/api/user/get-all');
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJson(['message' => 'Requisição concluida com sucesso!'])
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' =>[
+                    ['id',
+                    'name',
+                    'email']
+                ]
+            ]);
+
+    }
+    // teste de get usuarios ativos
+    public function testGetActiveEndpoint(){
+        $response = $this->get('/api/user/get-active');
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJson(['message' => 'Requisição concluida com sucesso!'])
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' =>[
+                    ['id',
+                    'name',
+                    'email']
+                ]
+            ]);
+    }
+    // teste middleware rota de update
+    public function testUpdateMiddlewareEndpoint(){
+        $payload = [
+            'teste' => 'desenvolvimento'
+        ];
+        $response = $this->put('/api/user/1', $payload);
+        $response->assertStatus(400);
+    }
+    // teste middleware rota de create
+    public function testCreateMiddlewareEndpoint(){
+        $payload = [
+            'teste' => 'desenvolvimento'
+        ];
+        $response = $this->post('/api/user');
+        $response->assertStatus(400);
+    }
+    // teste rota de update
+    public function testUpdateEndpoint(){
+        $payload = [
+            'name' => 'Rafaela Monteiro Pontes'
+        ];
+        $response = $this->put('/api/user/1', $payload);
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' =>[
+                    'id',
+                    'name',
+                    'email'
+                ]
+            ]);
+    }
+    // teste rota de update invalido
+    public function testUpdateEndpointFail(){
+        $payload = [
+            'name' => 'Rafaela Monteiro Pontes',
+            'email' => 'juliana_carvalho@panfletosecia.com'
+        ];
+        $response = $this->put('/api/user/1', $payload);
+        $response->assertStatus(400)
+            ->assertJson(['success' => false])
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
     }
 }
