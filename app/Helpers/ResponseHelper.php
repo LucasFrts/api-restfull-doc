@@ -5,12 +5,22 @@ namespace App\Helpers;
 class ResponseHelper{
 
     const OK = 200;
+    const CREATED = 201;
     const EMPTY = 204;
-    const ERROR = 500;
     const BADREQUEST = 400;
     const UNAUTHORIZED = 401;
     const NOTFOUND = 404;
+    const ERROR = 500;
 
+    public static function created($data = [], $msg = 'Registro criado com sucesso!')
+    {
+        $response = [
+            'success' => true,
+            'message' => $msg,
+            'data'    => $data
+        ];
+        return response()->json($response, self::CREATED);
+    }
     public static function success($data = [], $msg = 'Requisição concluida com sucesso!')
     {
         $response = [

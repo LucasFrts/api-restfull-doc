@@ -77,14 +77,6 @@ class UsersEndpointsTest extends TestCase{
         $response = $this->put('/api/user/1', $payload);
         $response->assertStatus(400);
     }
-    // teste middleware rota de create
-    public function testCreateMiddlewareEndpoint(){
-        $payload = [
-            'teste' => 'desenvolvimento'
-        ];
-        $response = $this->post('/api/user');
-        $response->assertStatus(400);
-    }
     // teste rota de update
     public function testUpdateEndpoint(){
         $payload = [
@@ -116,5 +108,65 @@ class UsersEndpointsTest extends TestCase{
                 'success',
                 'message',
             ]);
+    }
+    // teste middleware rota de create
+    public function testCreateMiddlewareEndpoint(){
+        $payload = [
+            'teste' => 'desenvolvimento'
+        ];
+        $response = $this->post('/api/user', $payload);
+        $response->assertStatus(400);
+    }
+    // teste do endpoint de create
+    public function testCreateEndpoint(){
+        $create_payload = [
+            'name' => 'Lucas Matheus Ramos de Freitas',
+            'email' => 'lucasmatheus.profissional@gmail.com',
+            'password' => 'passwordSeguro123',
+            'celular' => '(96) 98109-2620',
+            'sexo' => 'Masculino',
+            'data_nascimento' => '18/09/2001'
+        ];
+        $response = $this->post('/api/user', $create_payload);
+        $response->assertStatus(201)
+                ->assertJson(['success' => true])
+                    ->assertJsonStructure([
+                        'success',
+                        'message',
+                        'data'
+                    ]);
+    }
+    // teste do endpoint falho
+    public function testCreateEndpointFail(){
+        $create_payload = [
+            'name' => 'Lucas Matheus Ramos de Freitas',
+            'email' => 'lucasmatheus.profissional@gmail.com',
+            'password' => 'passwordSeguro123',
+            'celular' => '(96) 98109-2620',
+            'sexo' => 'Masculino',
+            'data_nascimento' => '18/09/2001'
+        ];
+        $response = $this->post('/api/user', $create_payload);
+        $response->assertStatus(400)
+                ->assertJson(['success' => false])
+                ->assertJsonStructure([
+                    'success',
+                    'message',
+                ]);
+    }
+    public function testDeleteEndpoint(){
+        $response = $this->delete('/api/user/1');
+        $response->assertStatus(200)
+                ->assertJson(['success' => true])
+                ->assertJsonStructure([
+                    'success',
+                    'message',
+                    'data'
+                ]);
+    }
+    // teste de de get sem resultado
+    public function testDeleteEndpointFail(){
+        $response = $this->delete('/api/user/99999');
+        $response->assertStatus(500);
     }
 }
