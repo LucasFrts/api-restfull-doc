@@ -27,9 +27,12 @@ class AuthController extends Controller{
           'email' => 'required|email',
           'password' => 'required'
         ];
-
+        $user = User::where('email', $email)->first();
+        if(!isset($user->id)){
+            return ResponseHelper::badRequest('Email não existente na base de dados.');
+        }
         if(Auth::validate($data, $rules)){
-            return ResponseHelper::success([], "Credenciais confirmadas");
+            return ResponseHelper::success($user, "Credenciais confirmadas.");
         }
         return ResponseHelper::badRequest('Credenciais incorretas!');
 
