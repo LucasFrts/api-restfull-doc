@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,3 +24,4 @@ Route::middleware('jwt.check')->group( function(){
     Route::put('user/{id}', [UsersController::class, 'update'])->middleware('validate.users.data')->name('user.update');  
     Route::delete('user/{id}', [UsersController::class, 'delete']);  
 });
+Route::post('/login', [AuthController::class, 'index']);
